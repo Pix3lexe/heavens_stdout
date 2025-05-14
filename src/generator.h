@@ -1,6 +1,7 @@
 #pragma once
 #include <QHash>
 #include <QList>
+#include <QRandomGenerator>
 #include <QString>
 #include <QStringList>
 #include <optional>
@@ -50,6 +51,14 @@ private:
 
     void    loadWordsetJson(const QString &directoryPath);
     QString pickRandomWord(const QStringList &wordList) const;
+    bool    dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords);
+
+    template <typename T, std::size_t N>
+    const T &getRandomArrayElem(const std::array<T, N> &array) const
+    {
+        int index = QRandomGenerator::global()->bounded(static_cast<quint32>(array.size()));
+        return array[index];
+    }
 
 private:
     QHash<WordType, QStringList> mWordMap;

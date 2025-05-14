@@ -16,20 +16,57 @@ Generator::Generator()
 
 QString Generator::pickRandomWord(const QStringList &wordList) const
 {
+    if(wordList.isEmpty())
+    {
+        return {};
+    }
     int index = QRandomGenerator::global()->bounded(wordList.length());
     return wordList.at(index);
 }
 
 QString Generator::generate_sentence(Complexity complexity)
 {
-    std::uint16_t maxWords  = SENTENCE_LENGTHS[complexity];
-    int           wordCount = QRandomGenerator::global()->bounded(maxWords);
+    std::uint16_t maxWords = SENTENCE_LENGTHS[complexity];
     QString       sentence{};
-    for(int i = 0; i < wordCount; ++i)
+    WordType      startType = getRandomArrayElem(START_RULES);
+    if(dfs(startType, 0, sentence, maxWords))
     {
-        sentence.append(" " + pickRandomWord(mWordMap[WordType::NOUN]));
+        return sentence;
     }
-    return sentence;
+
+    return "No valid sentence found";
+}
+
+
+bool Generator::dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords)
+{
+    if(wordCount == maxWords)
+    {
+        if(curType == WordType::END)
+        {
+            currentSentence.append(" " + pickRandomWord(mWordMap[curType]) + ".");
+            return true;
+        }
+        return false;
+    }
+    currentSentence.append(" " + pickRandomWord(mWordMap[curType]));
+    ++wordCount;
+
+    for(WordType nextType : FOLLOW_RULES[curType])
+    {
+        if(nextType != WordType::WT_COUNT)
+        {
+            QString backupSentence = currentSentence;
+
+            if(dfs(nextType, wordCount, currentSentence, maxWords))
+            {
+                return true;
+            }
+            currentSentence = backupSentence;
+        }
+    }
+
+    return false; // No valid path found from here
 }
 
 std::optional<WordType> Generator::mapSpeechPart(const QString &part) const

@@ -9,6 +9,11 @@ constexpr std::uint8_t                                MAX_FOLLOW       = 5;
 
 using FollowList = std::array<WordType, MAX_FOLLOW>;
 
+constexpr std::array<WordType, 5> START_RULES =
+    {WordType::NOUN, WordType::PRONOUN, WordType::DETERMINER, WordType::INTERJECTION, WordType::ADJECTIVE};
+
+
+// word types that can follow after another word
 constexpr std::array<FollowList, WT_COUNT> FOLLOW_RULES = {
     {// WordType::NOUN
      {WordType::VERB, WordType::CONJUNCTION, WordType::PREPOSITION, WordType::END, WordType::WT_COUNT},
