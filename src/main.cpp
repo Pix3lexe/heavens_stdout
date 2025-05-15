@@ -1,34 +1,11 @@
-#include "generator.h"
+#include "heavensstdout.h"
 
 #include <QApplication>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QWidget>
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-
-    QWidget window;
-    window.setWindowTitle("God's Microphone");
-
-    QVBoxLayout *layout = new QVBoxLayout(&window);
-
-    QLineEdit *textField = new QLineEdit();
-    textField->setReadOnly(true);
-    layout->addWidget(textField);
-
-    QPushButton *button = new QPushButton("Speak to me");
-    layout->addWidget(button);
-
-    Generator generator{};
-
-    QObject::connect(
-        button, &QPushButton::clicked, [&]() { textField->setText(generator.generate_sentence(Complexity::NORMAL)); });
-
-    window.setLayout(layout);
-    window.show();
-
+    QApplication  app(argc, argv);
+    HeavensStdout heavensStdout;
+    heavensStdout.show();
     return app.exec();
 }
