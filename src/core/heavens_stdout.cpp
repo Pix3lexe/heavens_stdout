@@ -1,4 +1,4 @@
-#include "heavensstdout.h"
+#include "heavens_stdout.h"
 
 HeavensStdout::HeavensStdout(QWidget *parent) : QMainWindow(parent)
 {

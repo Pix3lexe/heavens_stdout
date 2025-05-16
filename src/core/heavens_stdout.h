@@ -1,7 +1,7 @@
 #pragma once
 
 #include "generator.h"
-#include "ui_heavensstdout.h"
+#include "ui_heavens_stdout.h"
 
 #include <QMainWindow>
 
