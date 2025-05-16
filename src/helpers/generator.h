@@ -35,7 +35,8 @@ class Generator
 {
 public:
     Generator();
-    QString generate_sentence(Complexity complexity);
+    QString generate_sentence(Complexity complexity) const;
+    QString generate_random_sentence() const;
 
     const QString getWordsOfType(WordType type) const
     {
@@ -51,7 +52,7 @@ private:
 
     void    loadWordsetJson(const QString &directoryPath);
     QString pickRandomWord(const QStringList &wordList) const;
-    bool    dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords);
+    bool    dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords) const;
 
     template <typename T, std::size_t N>
     const T &getRandomArrayElem(const std::array<T, N> &array) const

@@ -9,7 +9,7 @@ HeavensStdout::HeavensStdout(QWidget *parent) : QMainWindow(parent)
 
 void HeavensStdout::onTalkButtonClicked()
 {
-    mFullText         = mGenerator.generate_sentence(Complexity::HIGH);
+    mFullText         = mGenerator.generate_random_sentence();
     mCurrentCharIndex = 0;
     mUi.godLineEdit->clear();
     mTypingTimer.start(1000 / TYPING_SPEED);
