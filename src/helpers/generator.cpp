@@ -31,7 +31,7 @@ QString Generator::generate_sentence(Complexity complexity)
     WordType      startType = getRandomArrayElem(START_RULES);
     if(dfs(startType, 0, sentence, maxWords))
     {
-        return sentence;
+        return sentence.removeFirst();
     }
 
     return "No valid sentence found";
@@ -44,7 +44,7 @@ bool Generator::dfs(WordType curType, int wordCount, QString &currentSentence, c
     {
         if(curType == WordType::END)
         {
-            currentSentence.append(" " + pickRandomWord(mWordMap[curType]) + ".");
+            currentSentence.append(".");
             return true;
         }
         return false;
