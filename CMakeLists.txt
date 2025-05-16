@@ -6,9 +6,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Core)
 qt_standard_project_setup()
+qt_add_resources(RESOURCE_GEN resources/resources.qrc)
 
 qt_add_executable(heavens_stdout
     src/main.cpp
+    ${RESOURCE_GEN}
 )
 
 add_subdirectory(src)

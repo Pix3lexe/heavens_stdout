@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/resources">
+    <file>temple_bg_cropped.png</file>
+    <file>temple_bg.png</file>
+  </qresource>
+</RCC>
