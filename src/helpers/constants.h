@@ -12,6 +12,8 @@ using FollowList = std::array<WordType, MAX_FOLLOW>;
 constexpr std::array<WordType, 5> START_RULES =
     {WordType::NOUN, WordType::PRONOUN, WordType::DETERMINER, WordType::INTERJECTION, WordType::ADJECTIVE};
 
+constexpr std::array<Complexity, Complexity::COMPLEXITY_COUNT> COMPLEXITIES =
+    {Complexity::LOW, Complexity::NORMAL, Complexity::HIGH, Complexity::GENIOUS};
 
 // word types that can follow after another word
 constexpr std::array<FollowList, WT_COUNT> FOLLOW_RULES = {

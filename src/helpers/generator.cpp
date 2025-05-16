@@ -24,7 +24,7 @@ QString Generator::pickRandomWord(const QStringList &wordList) const
     return wordList.at(index);
 }
 
-QString Generator::generate_sentence(Complexity complexity)
+QString Generator::generate_sentence(Complexity complexity) const
 {
     std::uint16_t maxWords = SENTENCE_LENGTHS[complexity];
     QString       sentence{};
@@ -34,11 +34,16 @@ QString Generator::generate_sentence(Complexity complexity)
         return sentence.removeFirst();
     }
 
-    return "No valid sentence found";
+    return "No valid sentence found :/";
+}
+
+QString Generator::generate_random_sentence() const
+{
+    return generate_sentence(getRandomArrayElem(COMPLEXITIES));
 }
 
 
-bool Generator::dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords)
+bool Generator::dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords) const
 {
     if(wordCount == maxWords)
     {
