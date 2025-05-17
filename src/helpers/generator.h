@@ -6,7 +6,6 @@
 #include <QStringList>
 #include <cstddef>
 #include <optional>
-#include <tuple>
 
 enum Complexity
 {
@@ -40,9 +39,6 @@ public:
     QString generateSentence(Complexity complexity) const;
     QString generateRandomSentence() const;
 
-    std::tuple<QString, int, std::size_t> searchString(const QString &search) const;
-    QString                               generateSequenceAt(std::size_t position, int length) const;
-
     const QString getWordsOfType(WordType type) const
     {
         if(mWordMap.contains(type))
@@ -59,7 +55,6 @@ private:
     QString pickRandomWord(const QStringList &wordList) const;
     bool    dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords) const;
 
-    char getLetterAtPosition(std::size_t position, quint32 baseSeed) const;
 
     template <typename T, std::size_t N>
     const T &getRandomArrayElem(const std::array<T, N> &array) const
@@ -70,5 +65,4 @@ private:
 
 private:
     QHash<WordType, QStringList> mWordMap;
-    mutable quint32              mCurrentBaseSeed;
 };
