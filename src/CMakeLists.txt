@@ -1,6 +1,7 @@
 # Add subdirectories first
 add_subdirectory(core)
 add_subdirectory(helpers)
+add_subdirectory(modes)
 
 # Include all directories so headers can be found
 target_include_directories(heavens_stdout PRIVATE
