@@ -152,7 +152,7 @@ QVector<int> prefixFunction(const QString &pattern)
     return pi;
 }
 
-std::pair<QString, std::size_t> Generator::searchString(const QString &search) const
+std::tuple<QString, int, std::size_t> Generator::searchString(const QString &search) const
 {
     std::size_t position  = 0;
     int         searchInd = 0;
@@ -176,16 +176,17 @@ std::pair<QString, std::size_t> Generator::searchString(const QString &search) c
 
 
     std::size_t foundPosition = position - searchLen;
-    const int   contextSize   = 50;
+    const int   contextSize   = 100;
     int         beforeStart   = static_cast<int>(foundPosition) - contextSize;
     if(beforeStart < 0)
     {
         beforeStart = 0;
     }
 
-    QString result = generateSequenceAt(beforeStart, foundPosition - beforeStart + searchLen + contextSize);
+    QString result     = generateSequenceAt(beforeStart, foundPosition - beforeStart + searchLen + contextSize);
+    int     localIndex = static_cast<int>(foundPosition - beforeStart);
 
-    return std::make_pair(result, foundPosition);
+    return std::make_tuple(result, localIndex, foundPosition);
 }
 
 QString Generator::generateSequenceAt(std::size_t position, int length) const

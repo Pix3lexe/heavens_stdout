@@ -6,7 +6,7 @@
 #include <QStringList>
 #include <cstddef>
 #include <optional>
-#include <utility>
+#include <tuple>
 
 enum Complexity
 {
@@ -40,8 +40,8 @@ public:
     QString generateSentence(Complexity complexity) const;
     QString generateRandomSentence() const;
 
-    std::pair<QString, std::size_t> searchString(const QString &search) const;
-    QString                         generateSequenceAt(std::size_t position, int length) const;
+    std::tuple<QString, int, std::size_t> searchString(const QString &search) const;
+    QString                               generateSequenceAt(std::size_t position, int length) const;
 
     const QString getWordsOfType(WordType type) const
     {

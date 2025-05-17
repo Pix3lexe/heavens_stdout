@@ -64,7 +64,7 @@ background-color: black; /* fallback color */</string>
 border: 2px solid white;</string>
     </property>
     <property name="text">
-     <string>1</string>
+     <string>I</string>
     </property>
    </widget>
    <widget class="QPushButton" name="stringSearchModeButton">
@@ -84,7 +84,7 @@ border: 2px solid white;</string>
 border: 2px solid white;</string>
     </property>
     <property name="text">
-     <string>2</string>
+     <string>II</string>
     </property>
    </widget>
    <widget class="QStackedWidget" name="widgetStack">

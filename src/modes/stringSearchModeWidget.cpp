@@ -21,21 +21,29 @@ void StringSearchModeWidget::onStringSearchLineEditReturnPressed()
     mUi.stringSearchLineEdit->clear();
     mUi.godTextBrowserSearchMode->setText("Searching in gods messages...");
 
-    auto watcher = new QFutureWatcher<std::pair<QString, std::size_t>>(this);
+    auto watcher = new QFutureWatcher<std::tuple<QString, int, std::size_t>>(this);
 
     connect(
         watcher,
-        &QFutureWatcher<std::pair<QString, std::size_t>>::finished,
+        &QFutureWatcher<std::tuple<QString, int, std::size_t>>::finished,
         this,
         [=, this]()
         {
-            auto res = watcher->result();
-            mUi.godTextBrowserSearchMode->setText(res.first);
-            mUi.stringSearchLineEdit->setText(QString("Found after %1 letters").arg(res.second));
+            auto [context, localIndex, globalIndex] = watcher->result();
+            QString before =
+                context.left(localIndex); // or res.second if you want to exclude the matched character itself
+            QString match = context.mid(localIndex, searchString.length());
+            QString after = context.mid(localIndex + searchString.length());
+
+            QString displayText =
+                QString("%1<span style=\"color: red; font-weight: bold;\">%2</span>%3").arg(before, match, after);
+            mUi.godTextBrowserSearchMode->setHtml(displayText);
+
+            mUi.stringSearchLineEdit->setText(QString("Found after %1 letters").arg(globalIndex));
             watcher->deleteLater();
         });
 
-    QFuture<std::pair<QString, std::size_t>> future =
+    QFuture<std::tuple<QString, int, std::size_t>> future =
         QtConcurrent::run([=, this]() { return mGenerator.searchString(searchString); });
 
     watcher->setFuture(future);
