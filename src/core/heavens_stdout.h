@@ -15,6 +15,8 @@ public:
     explicit HeavensStdout(QWidget *parent = nullptr);
 
 public slots:
+    void onSearchModeButtonClicked();
+    void onTalkModeButtonClicked();
     void onTalkButtonClicked();
     void appendNextCharacter();
 
