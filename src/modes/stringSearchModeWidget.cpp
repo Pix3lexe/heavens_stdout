@@ -14,40 +14,44 @@ StringSearchModeWidget::StringSearchModeWidget(QWidget *parent) : QWidget(parent
         &QLineEdit::returnPressed,
         this,
         &StringSearchModeWidget::onStringSearchLineEditReturnPressed);
+    connect(
+        &mSearchWatcher,
+        &QFutureWatcher<std::tuple<QString, int, std::size_t>>::finished,
+        this,
+        &StringSearchModeWidget::onSearchFinished);
+}
+
+StringSearchModeWidget::~StringSearchModeWidget()
+{
+    mCancelFlag = true;
 }
 
 void StringSearchModeWidget::onStringSearchLineEditReturnPressed()
 {
     mUi.godTextBrowserSearchMode->clear();
-    QString searchString = mUi.stringSearchLineEdit->text().toLower().remove(' ');
+    mSearchString = mUi.stringSearchLineEdit->text().toLower().remove(' ');
     mUi.stringSearchLineEdit->clear();
     mUi.godTextBrowserSearchMode->setText("Searching in gods messages...");
 
-    auto watcher = new QFutureWatcher<std::tuple<QString, int, std::size_t>>(this);
+    mSearchWatcher.setFuture(QtConcurrent::run([=, this]() { return this->searchString(mSearchString); }));
+}
 
-    connect(
-        watcher,
-        &QFutureWatcher<std::tuple<QString, int, std::size_t>>::finished,
-        this,
-        [=, this]()
-        {
-            auto [context, localIndex, globalIndex] = watcher->result();
-            QString before                          = context.left(localIndex);
-            QString match                           = context.mid(localIndex, searchString.length());
-            QString after                           = context.mid(localIndex + searchString.length());
+void StringSearchModeWidget::onSearchFinished()
+{
+    auto [context, localIndex, globalIndex] = mSearchWatcher.result();
+    if(localIndex == -1)
+    {
+        return;
+    }
+    QString before = context.left(localIndex);
+    QString match  = context.mid(localIndex, mSearchString.length());
+    QString after  = context.mid(localIndex + mSearchString.length());
 
-            QString displayText =
-                QString("%1<span style=\"color: red; font-weight: bold;\">%2</span>%3").arg(before, match, after);
-            mUi.godTextBrowserSearchMode->setHtml(displayText);
+    QString displayText =
+        QString("%1<span style=\"color: red; font-weight: bold;\">%2</span>%3").arg(before, match, after);
+    mUi.godTextBrowserSearchMode->setHtml(displayText);
 
-            mUi.stringSearchLineEdit->setText(QString("Found after %1 letters").arg(globalIndex));
-            watcher->deleteLater();
-        });
-
-    QFuture<std::tuple<QString, int, std::size_t>> future =
-        QtConcurrent::run([=, this]() { return this->searchString(searchString); });
-
-    watcher->setFuture(future);
+    mUi.stringSearchLineEdit->setText(QString("Found after %1 letters").arg(globalIndex));
 }
 
 
@@ -87,6 +91,10 @@ std::tuple<QString, int, std::size_t> StringSearchModeWidget::searchString(const
             ++searchInd;
         }
         ++position;
+        if(mCancelFlag)
+        {
+            return {"", -1, 0};
+        }
     }
 
 
