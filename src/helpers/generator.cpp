@@ -6,10 +6,10 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QRandomGenerator>
+#include <QVector>
 #include <cstdint>
-#include <qlogging.h>
 
-Generator::Generator()
+Generator::Generator() : mCurrentBaseSeed(1)
 {
     loadWordsetJson("../deps/wordset-dictionary/data");
 }
@@ -24,7 +24,7 @@ QString Generator::pickRandomWord(const QStringList &wordList) const
     return wordList.at(index);
 }
 
-QString Generator::generate_sentence(Complexity complexity) const
+QString Generator::generateSentence(Complexity complexity) const
 {
     std::uint16_t maxWords = SENTENCE_LENGTHS[complexity];
     QString       sentence{};
@@ -37,9 +37,9 @@ QString Generator::generate_sentence(Complexity complexity) const
     return "No valid sentence found :/";
 }
 
-QString Generator::generate_random_sentence() const
+QString Generator::generateRandomSentence() const
 {
-    return generate_sentence(getRandomArrayElem(COMPLEXITIES));
+    return generateSentence(getRandomArrayElem(COMPLEXITIES));
 }
 
 
@@ -134,4 +134,86 @@ void Generator::loadWordsetJson(const QString &directoryPath)
             }
         }
     }
+}
+
+QVector<int> prefixFunction(const QString &pattern)
+{
+    int          n = pattern.length();
+    QVector<int> pi(n, 0);
+    int          k = 0;
+    for(int i = 1; i < n; ++i)
+    {
+        while(k > 0 && pattern[k] != pattern[i])
+            k = pi[k - 1];
+        if(pattern[k] == pattern[i])
+            ++k;
+        pi[i] = k;
+    }
+    return pi;
+}
+
+std::pair<QString, std::size_t> Generator::searchString(const QString &search) const
+{
+    std::size_t position  = 0;
+    int         searchInd = 0;
+    int         searchLen = search.length();
+    mCurrentBaseSeed      = QRandomGenerator::global()->generate();
+
+    auto pi = prefixFunction(search);
+    while(searchInd < searchLen)
+    {
+        char nextLetter = getLetterAtPosition(position, mCurrentBaseSeed);
+        while(searchInd > 0 && nextLetter != search.at(searchInd))
+        {
+            searchInd = pi[searchInd - 1];
+        }
+        if(nextLetter == search.at(searchInd))
+        {
+            ++searchInd;
+        }
+        ++position;
+    }
+
+
+    std::size_t foundPosition = position - searchLen;
+    const int   contextSize   = 50;
+    int         beforeStart   = static_cast<int>(foundPosition) - contextSize;
+    if(beforeStart < 0)
+    {
+        beforeStart = 0;
+    }
+
+    QString result = generateSequenceAt(beforeStart, foundPosition - beforeStart + searchLen + contextSize);
+
+    return std::make_pair(result, foundPosition);
+}
+
+QString Generator::generateSequenceAt(std::size_t position, int length) const
+{
+    QString result;
+    result.reserve(length);
+
+    for(int i = 0; i < length; ++i)
+    {
+        result.append(getLetterAtPosition(position + i, mCurrentBaseSeed));
+    }
+
+    return result;
+}
+
+char Generator::getLetterAtPosition(std::size_t position, quint32 baseSeed) const
+{
+    quint32 seed = baseSeed + position;
+
+    // Apply a better mixing function for the seed
+    // This is a simplified version of MurmurHash3 mixing
+    seed ^= seed >> 16;
+    seed *= 0x85ebca6b;
+    seed ^= seed >> 13;
+    seed *= 0xc2b2ae35;
+    seed ^= seed >> 16;
+
+    // Convert to index in the LETTERS array
+    int index = seed % LETTERS.size();
+    return LETTERS[index];
 }

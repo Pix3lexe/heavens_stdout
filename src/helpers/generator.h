@@ -4,7 +4,9 @@
 #include <QRandomGenerator>
 #include <QString>
 #include <QStringList>
+#include <cstddef>
 #include <optional>
+#include <utility>
 
 enum Complexity
 {
@@ -35,8 +37,11 @@ class Generator
 {
 public:
     Generator();
-    QString generate_sentence(Complexity complexity) const;
-    QString generate_random_sentence() const;
+    QString generateSentence(Complexity complexity) const;
+    QString generateRandomSentence() const;
+
+    std::pair<QString, std::size_t> searchString(const QString &search) const;
+    QString                         generateSequenceAt(std::size_t position, int length) const;
 
     const QString getWordsOfType(WordType type) const
     {
@@ -54,6 +59,8 @@ private:
     QString pickRandomWord(const QStringList &wordList) const;
     bool    dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords) const;
 
+    char getLetterAtPosition(std::size_t position, quint32 baseSeed) const;
+
     template <typename T, std::size_t N>
     const T &getRandomArrayElem(const std::array<T, N> &array) const
     {
@@ -63,4 +70,5 @@ private:
 
 private:
     QHash<WordType, QStringList> mWordMap;
+    mutable quint32              mCurrentBaseSeed;
 };
