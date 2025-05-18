@@ -9,7 +9,7 @@ TalkModeWidget::TalkModeWidget(QWidget *parent) : QWidget(parent)
 
 void TalkModeWidget::onTalkButtonClicked()
 {
-    mFullText         = mGenerator.generateRandomSentence();
+    mFullText         = mGenerator.generateRandomSentences();
     mCurrentCharIndex = 0;
     mUi.godTextBrowserTalkMode->clear();
     mTypingTimer.start(1000 / TYPING_SPEED);

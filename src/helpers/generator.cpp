@@ -35,9 +35,14 @@ QString Generator::generateSentence(Complexity complexity) const
     return "No valid sentence found :/";
 }
 
-QString Generator::generateRandomSentence() const
+QString Generator::generateRandomSentences() const
 {
-    return generateSentence(getRandomArrayElem(COMPLEXITIES));
+    QString res = generateSentence(getRandomArrayElem(COMPLEXITIES));
+    for(int i = 0; i < QRandomGenerator::global()->bounded(MAX_SENTENCES - 1); ++i)
+    {
+        res.append(" " + generateSentence(getRandomArrayElem(COMPLEXITIES)));
+    }
+    return res;
 }
 
 
@@ -52,8 +57,12 @@ bool Generator::dfs(WordType curType, int wordCount, QString &currentSentence, c
         }
         return false;
     }
-    currentSentence.append(" " + pickRandomWord(mWordMap[curType]));
-    ++wordCount;
+    QString nextWord = pickRandomWord(mWordMap[curType]);
+    if(!nextWord.isEmpty())
+    {
+        currentSentence.append(" " + pickRandomWord(mWordMap[curType]));
+        ++wordCount;
+    }
 
     for(WordType nextType : FOLLOW_RULES[curType])
     {
