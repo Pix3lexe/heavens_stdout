@@ -49,7 +49,8 @@ void StringSearchModeWidget::onSearchFinished()
         QString("%1<span style=\"color: red; font-weight: bold;\">%2</span>%3").arg(before, match, after);
     mUi.godTextBrowserSearchMode->setHtml(displayText);
 
-    mUi.stringSearchLineEdit->setText(QString("Found after %1 letters").arg(globalIndex));
+    mUi.godTextBrowserSearchMode->append(
+        QString("<span style=\"color: green; font-weight: bold;\">Found after %1 letters</span>").arg(globalIndex));
 }
 
 std::vector<int> prefixFunction(const std::string &pattern)
