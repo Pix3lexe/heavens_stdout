@@ -15,6 +15,7 @@ class StringSearchModeWidget : public QWidget
 public:
     explicit StringSearchModeWidget(QWidget *parent = nullptr);
     ~StringSearchModeWidget();
+    void                                  startParallelSearch(const std::string &search);
     std::tuple<QString, int, std::size_t> searchString(const std::string &search) const;
     QString                               generateSequenceAt(std::size_t position, int length, quint64 seed) const;
 

@@ -31,8 +31,7 @@ void StringSearchModeWidget::onStringSearchLineEditReturnPressed()
     mSearchString = mUi.stringSearchLineEdit->text().toLower().remove(' ').toStdString();
     mUi.stringSearchLineEdit->clear();
     mUi.godTextBrowserSearchMode->setText("Searching in gods messages...");
-
-    mSearchWatcher.setFuture(QtConcurrent::run([this]() { return this->searchString(mSearchString); }));
+    startParallelSearch(mSearchString);
 }
 
 void StringSearchModeWidget::onSearchFinished()
@@ -126,4 +125,68 @@ QString StringSearchModeWidget::generateSequenceAt(std::size_t position, int len
     }
 
     return result;
+}
+
+void StringSearchModeWidget::startParallelSearch(const std::string &search)
+{
+    if(mSearchWatcher.isRunning())
+    {
+        mCancelFlag = true;
+        mSearchWatcher.waitForFinished();
+    }
+    mCancelFlag = false;
+
+    const int threadCount = std::thread::hardware_concurrency();
+
+    QList<QFuture<std::tuple<QString, int, std::size_t>>> futures;
+
+    // start parallel searches
+    for(int i = 0; i < threadCount; ++i)
+    {
+        QFuture<std::tuple<QString, int, std::size_t>> future =
+            QtConcurrent::run([this, search]() { return this->searchString(search); });
+
+        futures.append(future);
+    }
+
+    // master future that checks all ongoing searches
+    QFuture<std::tuple<QString, int, std::size_t>> masterFuture = QtConcurrent::run(
+        [this, futures]()
+        {
+            while(!mCancelFlag)
+            {
+                for(const auto &future : futures)
+                {
+                    if(future.isFinished())
+                    {
+                        auto result = future.result();
+
+                        if(!std::get<0>(result).isEmpty())
+                        {
+                            mCancelFlag = true;
+                            return result;
+                        }
+                    }
+                }
+
+                bool allDone = true;
+                for(const auto &future : futures)
+                {
+                    if(!future.isFinished())
+                    {
+                        allDone = false;
+                        break;
+                    }
+                }
+
+                if(allDone)
+                {
+                    return std::tuple<QString, int, std::size_t>{QString(), 0, 0};
+                }
+            }
+
+            return std::tuple<QString, int, std::size_t>{QString(), 0, 0};
+        });
+
+    mSearchWatcher.setFuture(masterFuture);
 }
