@@ -46,7 +46,7 @@ void StringSearchModeWidget::onSearchFinished()
     QString after  = context.mid(localIndex + mSearchString.length());
 
     QString displayText =
-        QString("%1<span style=\"color: red; font-weight: bold;\">%2</span>%3").arg(before, match, after);
+        QString("...%1<span style=\"color: red; font-weight: bold;\">%2</span>%3...").arg(before, match, after);
     mUi.godTextBrowserSearchMode->setHtml(displayText);
 
     mUi.godTextBrowserSearchMode->append(
