@@ -37,7 +37,7 @@ class Generator
 public:
     Generator();
     QString generateSentence(Complexity complexity) const;
-    QString generateRandomSentence() const;
+    QString generateRandomSentences() const;
 
     const QString getWordsOfType(WordType type) const
     {
@@ -62,6 +62,8 @@ private:
         int index = QRandomGenerator::global()->bounded(static_cast<quint32>(array.size()));
         return array[index];
     }
+
+    static constexpr int MAX_SENTENCES = 5;
 
 private:
     QHash<WordType, QStringList> mWordMap;
