@@ -47,5 +47,6 @@ constexpr std::array<FollowList, WT_COUNT> FOLLOW_RULES = {
      // WordType::END
      {WordType::WT_COUNT, WordType::WT_COUNT, WordType::WT_COUNT, WordType::WT_COUNT, WordType::WT_COUNT}}};
 
-constexpr std::array<char, 26> LETTERS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-                                          'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+constexpr int                            LETTER_COUNT = 26;
+constexpr std::array<char, LETTER_COUNT> LETTERS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                                                    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};

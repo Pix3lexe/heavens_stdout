@@ -1,9 +1,11 @@
 #pragma once
 
+#include "constants.h"
 #include "ui_stringSearchModeWidget.h"
 
 #include <QFutureWatcher>
 #include <QWidget>
+#include <string>
 #include <tuple>
 
 class StringSearchModeWidget : public QWidget
@@ -13,19 +15,30 @@ class StringSearchModeWidget : public QWidget
 public:
     explicit StringSearchModeWidget(QWidget *parent = nullptr);
     ~StringSearchModeWidget();
-    std::tuple<QString, int, std::size_t> searchString(const QString &search) const;
-    QString                               generateSequenceAt(std::size_t position, int length) const;
+    std::tuple<QString, int, std::size_t> searchString(const std::string &search) const;
+    QString                               generateSequenceAt(std::size_t position, int length, quint64 seed) const;
 
 public slots:
     void onStringSearchLineEditReturnPressed();
     void onSearchFinished();
 
 private:
-    char getLetterAtPosition(std::size_t position, quint32 baseSeed) const;
+    inline char getLetterAtPosition(std::size_t position, quint64 baseSeed) const noexcept
+    {
+        quint64 seed = baseSeed + position;
+
+        // This is a simplified version of MurmurHash3 mixing
+        seed ^= seed >> 33;
+        seed *= 0xff51afd7ed558ccdULL;
+        seed ^= seed >> 33;
+        seed *= 0xc4ceb9fe1a85ec53ULL;
+        seed ^= seed >> 33;
+
+        return LETTERS[seed % LETTER_COUNT];
+    }
 
     Ui::StringSearchModeWidget                            mUi;
-    mutable quint32                                       mCurrentBaseSeed;
-    QString                                               mSearchString;
+    std::string                                           mSearchString;
     QFutureWatcher<std::tuple<QString, int, std::size_t>> mSearchWatcher;
     bool                                                  mCancelFlag = false;
 };

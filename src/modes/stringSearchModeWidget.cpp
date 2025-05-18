@@ -1,11 +1,10 @@
 #include "stringSearchModeWidget.h"
 
-#include "constants.h"
-
 #include <QFutureWatcher>
 #include <QtConcurrent/QtConcurrent>
+#include <vector>
 
-StringSearchModeWidget::StringSearchModeWidget(QWidget *parent) : QWidget(parent), mCurrentBaseSeed(1)
+StringSearchModeWidget::StringSearchModeWidget(QWidget *parent) : QWidget(parent)
 {
     mUi.setupUi(this);
 
@@ -29,11 +28,11 @@ StringSearchModeWidget::~StringSearchModeWidget()
 void StringSearchModeWidget::onStringSearchLineEditReturnPressed()
 {
     mUi.godTextBrowserSearchMode->clear();
-    mSearchString = mUi.stringSearchLineEdit->text().toLower().remove(' ');
+    mSearchString = mUi.stringSearchLineEdit->text().toLower().remove(' ').toStdString();
     mUi.stringSearchLineEdit->clear();
     mUi.godTextBrowserSearchMode->setText("Searching in gods messages...");
 
-    mSearchWatcher.setFuture(QtConcurrent::run([=, this]() { return this->searchString(mSearchString); }));
+    mSearchWatcher.setFuture(QtConcurrent::run([this]() { return this->searchString(mSearchString); }));
 }
 
 void StringSearchModeWidget::onSearchFinished()
@@ -54,49 +53,53 @@ void StringSearchModeWidget::onSearchFinished()
     mUi.stringSearchLineEdit->setText(QString("Found after %1 letters").arg(globalIndex));
 }
 
-
-QVector<int> prefixFunction(const QString &pattern)
+std::vector<int> prefixFunction(const std::string &pattern)
 {
-    int          n = pattern.length();
-    QVector<int> pi(n, 0);
-    int          k = 0;
+    int              n = pattern.length();
+    std::vector<int> pi(n);
+    int              k = 0;
     for(int i = 1; i < n; ++i)
     {
         while(k > 0 && pattern[k] != pattern[i])
+        {
             k = pi[k - 1];
+        }
         if(pattern[k] == pattern[i])
+        {
             ++k;
+        }
         pi[i] = k;
     }
     return pi;
 }
 
-std::tuple<QString, int, std::size_t> StringSearchModeWidget::searchString(const QString &search) const
+std::tuple<QString, int, std::size_t> StringSearchModeWidget::searchString(const std::string &search) const
 {
     std::size_t position  = 0;
     int         searchInd = 0;
     int         searchLen = search.length();
-    mCurrentBaseSeed      = QRandomGenerator::global()->generate();
+    quint64     seed      = QRandomGenerator64::global()->generate();
 
     auto pi = prefixFunction(search);
-    while(searchInd < searchLen)
+    while(searchInd < searchLen && !mCancelFlag)
     {
-        char nextLetter = getLetterAtPosition(position, mCurrentBaseSeed);
-        while(searchInd > 0 && nextLetter != search.at(searchInd))
+        char  nextLetter = getLetterAtPosition(position, seed);
+        QChar targetChar = search[searchInd];
+        while(searchInd > 0 && nextLetter != search[searchInd])
         {
-            searchInd = pi[searchInd - 1];
+            searchInd  = pi[searchInd - 1];
+            targetChar = search[searchInd];
         }
-        if(nextLetter == search.at(searchInd))
+        if(nextLetter == targetChar)
         {
             ++searchInd;
         }
         ++position;
-        if(mCancelFlag)
-        {
-            return {"", -1, 0};
-        }
     }
-
+    if(mCancelFlag)
+    {
+        return {"", -1, 0};
+    }
 
     std::size_t foundPosition = position - searchLen;
     const int   contextSize   = 100;
@@ -106,36 +109,21 @@ std::tuple<QString, int, std::size_t> StringSearchModeWidget::searchString(const
         beforeStart = 0;
     }
 
-    QString result     = generateSequenceAt(beforeStart, foundPosition - beforeStart + searchLen + contextSize);
+    QString result     = generateSequenceAt(beforeStart, foundPosition - beforeStart + searchLen + contextSize, seed);
     int     localIndex = static_cast<int>(foundPosition - beforeStart);
 
     return std::make_tuple(result, localIndex, foundPosition);
 }
 
-QString StringSearchModeWidget::generateSequenceAt(std::size_t position, int length) const
+QString StringSearchModeWidget::generateSequenceAt(std::size_t position, int length, quint64 seed) const
 {
     QString result;
     result.reserve(length);
 
     for(int i = 0; i < length; ++i)
     {
-        result.append(getLetterAtPosition(position + i, mCurrentBaseSeed));
+        result.append(getLetterAtPosition(position + i, seed));
     }
 
     return result;
-}
-
-char StringSearchModeWidget::getLetterAtPosition(std::size_t position, quint32 baseSeed) const
-{
-    quint32 seed = baseSeed + position;
-
-    // This is a simplified version of MurmurHash3 mixing
-    seed ^= seed >> 16;
-    seed *= 0x85ebca6b;
-    seed ^= seed >> 13;
-    seed *= 0xc2b2ae35;
-    seed ^= seed >> 16;
-
-    int index = seed % LETTERS.size();
-    return LETTERS[index];
 }
