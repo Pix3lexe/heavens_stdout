@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>StringSearchModeWidget</class>
+ <widget class="QWidget" name="StringSearchModeWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>714</width>
+    <height>1000</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>714</width>
+    <height>1000</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>714</width>
+    <height>1000</height>
+   </size>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">font: 700 10pt &quot;JetBrainsMonoNL Nerd Font&quot;;
+background-image: url(:/resources/temple_bg_cropped.png);
+background-repeat: no-repeat;
+background-position: center;
+background-color: black; /* fallback color */</string>
+  </property>
+  <widget class="QTextBrowser" name="godTextBrowserSearchMode">
+   <property name="geometry">
+    <rect>
+     <x>109</x>
+     <y>706</y>
+     <width>497</width>
+     <height>180</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>497</width>
+     <height>180</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>497</width>
+     <height>180</height>
+    </size>
+   </property>
+   <property name="mouseTracking">
+    <bool>true</bool>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: none;
+background-color: rgba(0, 0, 0, 200);
+border: 1px solid white;
+color: white;</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="stringSearchLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>152</x>
+     <y>633</y>
+     <width>410</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>410</width>
+     <height>31</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>410</width>
+     <height>31</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: none;
+background-color: #2a6b2a;
+color: #e0f3e0;
+border: 2px solid #4caf50;
+border-radius: 6px;
+font-weight: bold;
+font-size: 14px;</string>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../resources/resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

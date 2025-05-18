@@ -4,6 +4,7 @@
 #include <QRandomGenerator>
 #include <QString>
 #include <QStringList>
+#include <cstddef>
 #include <optional>
 
 enum Complexity
@@ -35,8 +36,8 @@ class Generator
 {
 public:
     Generator();
-    QString generate_sentence(Complexity complexity) const;
-    QString generate_random_sentence() const;
+    QString generateSentence(Complexity complexity) const;
+    QString generateRandomSentence() const;
 
     const QString getWordsOfType(WordType type) const
     {
@@ -53,6 +54,7 @@ private:
     void    loadWordsetJson(const QString &directoryPath);
     QString pickRandomWord(const QStringList &wordList) const;
     bool    dfs(WordType curType, int wordCount, QString &currentSentence, const std::uint16_t maxWords) const;
+
 
     template <typename T, std::size_t N>
     const T &getRandomArrayElem(const std::array<T, N> &array) const

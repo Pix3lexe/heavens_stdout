@@ -6,8 +6,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QRandomGenerator>
-#include <cstdint>
-#include <qlogging.h>
 
 Generator::Generator()
 {
@@ -24,7 +22,7 @@ QString Generator::pickRandomWord(const QStringList &wordList) const
     return wordList.at(index);
 }
 
-QString Generator::generate_sentence(Complexity complexity) const
+QString Generator::generateSentence(Complexity complexity) const
 {
     std::uint16_t maxWords = SENTENCE_LENGTHS[complexity];
     QString       sentence{};
@@ -37,9 +35,9 @@ QString Generator::generate_sentence(Complexity complexity) const
     return "No valid sentence found :/";
 }
 
-QString Generator::generate_random_sentence() const
+QString Generator::generateRandomSentence() const
 {
-    return generate_sentence(getRandomArrayElem(COMPLEXITIES));
+    return generateSentence(getRandomArrayElem(COMPLEXITIES));
 }
 
 
