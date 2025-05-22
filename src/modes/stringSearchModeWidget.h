@@ -28,13 +28,9 @@ private:
     {
         quint64 seed = baseSeed + position;
 
-        // This is a simplified version of MurmurHash3 mixing
         seed ^= seed >> 33;
         seed *= 0xff51afd7ed558ccdULL;
         seed ^= seed >> 33;
-        seed *= 0xc4ceb9fe1a85ec53ULL;
-        seed ^= seed >> 33;
-
         return LETTERS[seed % LETTER_COUNT];
     }
 

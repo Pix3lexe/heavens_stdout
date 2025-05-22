@@ -53,9 +53,10 @@ void StringSearchModeWidget::onSearchFinished()
         QString("<span style=\"color: green; font-weight: bold;\">Found after %1 letters</span>").arg(globalIndex));
 }
 
-std::vector<int> prefixFunction(const std::string &pattern)
+
+inline std::vector<int> prefixFunction(const std::string &pattern)
 {
-    int              n = pattern.length();
+    const int        n = pattern.length();
     std::vector<int> pi(n);
     int              k = 0;
     for(int i = 1; i < n; ++i)
@@ -73,44 +74,77 @@ std::vector<int> prefixFunction(const std::string &pattern)
     return pi;
 }
 
+inline void generateBlock(char *buffer, std::size_t startPos, int length, quint64 baseSeed) noexcept
+{
+    constexpr int BLOCK_SIZE = 64; // Process in blocks
+
+    for(int i = 0; i < length; i += BLOCK_SIZE)
+    {
+        const int blockEnd = std::min(i + BLOCK_SIZE, length);
+        for(int j = i; j < blockEnd; ++j)
+        {
+            quint64 seed = baseSeed + startPos + j;
+            seed ^= seed >> 33;
+            seed *= 0xff51afd7ed558ccdULL;
+            seed ^= seed >> 33;
+            buffer[j] = LETTERS[seed % LETTER_COUNT];
+        }
+    }
+}
+
 std::tuple<QString, int, std::size_t> StringSearchModeWidget::searchString(const std::string &search) const
 {
-    std::size_t position  = 0;
-    int         searchInd = 0;
-    int         searchLen = search.length();
-    quint64     seed      = QRandomGenerator64::global()->generate();
+    if(search.empty())
+        return {"", -1, 0};
 
-    auto pi = prefixFunction(search);
+    std::size_t   position  = 0;
+    int           searchInd = 0;
+    const int     searchLen = search.length();
+    const quint64 seed      = QRandomGenerator64::global()->generate();
+
+    const auto pi = prefixFunction(search);
+
+    constexpr int BUFFER_SIZE = 1024;
+    char          buffer[BUFFER_SIZE];
+    int           bufferPos = BUFFER_SIZE;
+
     while(searchInd < searchLen && !mCancelFlag)
     {
-        char  nextLetter = getLetterAtPosition(position, seed);
-        QChar targetChar = search[searchInd];
+        // Refill buffer when needed
+        if(bufferPos >= BUFFER_SIZE)
+        {
+            generateBlock(buffer, position, BUFFER_SIZE, seed);
+            bufferPos = 0;
+        }
+
+        const char nextLetter = buffer[bufferPos++];
+        const char targetChar = search[searchInd];
+
+        // KMP matching
         while(searchInd > 0 && nextLetter != search[searchInd])
         {
-            searchInd  = pi[searchInd - 1];
-            targetChar = search[searchInd];
+            searchInd = pi[searchInd - 1];
         }
+
         if(nextLetter == targetChar)
         {
             ++searchInd;
         }
+
         ++position;
     }
+
     if(mCancelFlag)
     {
         return {"", -1, 0};
     }
 
-    std::size_t foundPosition = position - searchLen;
-    const int   contextSize   = 100;
-    int         beforeStart   = static_cast<int>(foundPosition) - contextSize;
-    if(beforeStart < 0)
-    {
-        beforeStart = 0;
-    }
+    const std::size_t foundPosition = position - searchLen;
+    constexpr int     contextSize   = 100;
+    const int         beforeStart   = std::max(0, static_cast<int>(foundPosition) - contextSize);
 
-    QString result     = generateSequenceAt(beforeStart, foundPosition - beforeStart + searchLen + contextSize, seed);
-    int     localIndex = static_cast<int>(foundPosition - beforeStart);
+    const QString result = generateSequenceAt(beforeStart, foundPosition - beforeStart + searchLen + contextSize, seed);
+    const int     localIndex = static_cast<int>(foundPosition - beforeStart);
 
     return std::make_tuple(result, localIndex, foundPosition);
 }
