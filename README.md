@@ -16,7 +16,13 @@ git clone https://github.com/Pix3lexe/heavens_stdout.git
 cd heavens_stdout
 ```
 
-3. Build with **cmake**
+3. Initialize git submodules
+
+```bash
+git submodule update --init --recursive
+```
+
+4. Build with **cmake**
 
 ```bash
 mkdir build && cd build
@@ -24,6 +30,7 @@ cmake ..
 ```
 
 ---
+
 <div align="center">
   <img src="https://github.com/user-attachments/assets/f4201fe2-7e27-4f61-8f9e-84c4e4d51720"/>
 </div>
