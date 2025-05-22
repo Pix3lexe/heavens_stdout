@@ -1,8 +1,10 @@
 #include "talkModeWidget.h"
 
-TalkModeWidget::TalkModeWidget(QWidget *parent) : QWidget(parent)
+TalkModeWidget::TalkModeWidget(QWidget *parent) : ScalableWidget(":resources/temple_bg_cropped.png", parent)
 {
     mUi.setupUi(this);
+    registerScalableChild(mUi.talkButton);
+    registerScalableChild(mUi.godTextBrowserTalkMode);
     connect(mUi.talkButton, &QPushButton::clicked, this, &TalkModeWidget::onTalkButtonClicked);
     connect(&mTypingTimer, &QTimer::timeout, this, &TalkModeWidget::appendNextCharacter);
 }

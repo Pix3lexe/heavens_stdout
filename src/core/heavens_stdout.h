@@ -1,12 +1,7 @@
 #pragma once
-
-#include "stringSearchModeWidget.h"
-#include "talkModeWidget.h"
-#include "ui_heavens_stdout.h"
+#include "mainScalableWidget.h"
 
 #include <QMainWindow>
-#include <QTimer>
-
 
 class HeavensStdout : public QMainWindow
 {
@@ -14,12 +9,6 @@ class HeavensStdout : public QMainWindow
 public:
     explicit HeavensStdout(QWidget *parent = nullptr);
 
-public slots:
-    void onTalkModeButtonClicked();
-    void onStringSearchModeButtonClicked();
-
 private:
-    Ui::MainWindow          mUi;
-    TalkModeWidget         *mTalkModeWidget         = nullptr;
-    StringSearchModeWidget *mStringSearchModeWidget = nullptr;
+    MainScalableWidget *mCentralWidget = nullptr;
 };

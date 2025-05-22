@@ -4,9 +4,12 @@
 #include <QtConcurrent/QtConcurrent>
 #include <vector>
 
-StringSearchModeWidget::StringSearchModeWidget(QWidget *parent) : QWidget(parent)
+StringSearchModeWidget::StringSearchModeWidget(QWidget *parent) :
+    ScalableWidget(":resources/temple_bg_cropped.png", parent)
 {
     mUi.setupUi(this);
+    registerScalableChild(mUi.stringSearchLineEdit);
+    registerScalableChild(mUi.godTextBrowserSearchMode);
 
     connect(
         mUi.stringSearchLineEdit,

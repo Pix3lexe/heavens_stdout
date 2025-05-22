@@ -10,18 +10,6 @@
     <height>1000</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>714</width>
-    <height>1000</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>714</width>
-    <height>1000</height>
-   </size>
-  </property>
   <property name="styleSheet">
    <string notr="true">font: 700 10pt &quot;JetBrainsMonoNL Nerd Font&quot;;
 background-image: url(:/resources/temple_bg_cropped.png);
@@ -37,18 +25,6 @@ background-color: black; /* fallback color */</string>
      <width>100</width>
      <height>31</height>
     </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>100</width>
-     <height>31</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>100</width>
-     <height>31</height>
-    </size>
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
@@ -75,18 +51,6 @@ text-transform: uppercase;</string>
      <width>497</width>
      <height>180</height>
     </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>497</width>
-     <height>180</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>497</width>
-     <height>180</height>
-    </size>
    </property>
    <property name="mouseTracking">
     <bool>true</bool>

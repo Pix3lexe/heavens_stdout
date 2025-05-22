@@ -1,14 +1,14 @@
 #pragma once
 
 #include "constants.h"
+#include "scalableWidget.h"
 #include "ui_stringSearchModeWidget.h"
 
 #include <QFutureWatcher>
-#include <QWidget>
 #include <string>
 #include <tuple>
 
-class StringSearchModeWidget : public QWidget
+class StringSearchModeWidget : public ScalableWidget
 {
     Q_OBJECT
 

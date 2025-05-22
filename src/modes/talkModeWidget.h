@@ -1,14 +1,14 @@
 #pragma once
 
 #include "generator.h"
+#include "scalableWidget.h"
 #include "ui_talkModeWidget.h"
 
 #include <QTimer>
-#include <QWidget>
 
 constexpr int TYPING_SPEED = 50; // chars per second
 
-class TalkModeWidget : public QWidget
+class TalkModeWidget : public ScalableWidget
 {
     Q_OBJECT
 

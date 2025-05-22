@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HeavensStdoutWidget</class>
+ <widget class="QWidget" name="HeavensStdoutWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>714</width>
+    <height>1000</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">font: 700 10pt &quot;JetBrainsMonoNL Nerd Font&quot;;
+background-image: url(:/resources/temple_bg_cropped.png);
+background-repeat: no-repeat;
+background-position: center;
+background-color: black; /* fallback color */</string>
+  </property>
+  <widget class="QPushButton" name="stringSearchModeButton">
+   <property name="geometry">
+    <rect>
+     <x>284</x>
+     <y>480</y>
+     <width>25</width>
+     <height>99</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: transparent;
+border: 2px solid white;</string>
+   </property>
+   <property name="text">
+    <string>II</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="talkModeButton">
+   <property name="geometry">
+    <rect>
+     <x>226</x>
+     <y>480</y>
+     <width>25</width>
+     <height>99</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: transparent;
+border: 2px solid white;</string>
+   </property>
+   <property name="text">
+    <string>I</string>
+   </property>
+  </widget>
+  <widget class="QStackedWidget" name="widgetStack">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>714</width>
+     <height>1000</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: transparent;</string>
+   </property>
+  </widget>
+  <zorder>widgetStack</zorder>
+  <zorder>stringSearchModeButton</zorder>
+  <zorder>talkModeButton</zorder>
+ </widget>
+ <resources>
+  <include location="../../resources/resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
