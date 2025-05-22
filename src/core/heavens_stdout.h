@@ -1,7 +1,8 @@
 #pragma once
-#include "mainScalableWidget.h"
 
 #include <QMainWindow>
+
+class MainScalableWidget;
 
 class HeavensStdout : public QMainWindow
 {

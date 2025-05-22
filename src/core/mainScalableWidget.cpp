@@ -1,5 +1,8 @@
 #include "mainScalableWidget.h"
 
+#include "stringSearchModeWidget.h"
+#include "talkModeWidget.h"
+
 MainScalableWidget::MainScalableWidget(QWidget *parent) : ScalableWidget(":resources/temple_bg_cropped.png", parent)
 {
     mUi.setupUi(this);
