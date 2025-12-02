@@ -7,7 +7,7 @@ Simply press the **Talk to Me** button to start the interaction.
 
 ## Build Instructions
 
-1. Make sure you have **Qt6** installed on your system.
+1. Make sure you have **Qt6**, **CMake** and a C++ compiler installed on your system.
 
 2. Clone the repository and navigate to the project directory:
 
@@ -27,6 +27,7 @@ git submodule update --init --recursive
 ```bash
 mkdir build && cd build
 cmake ..
+make -j $(nproc)
 ```
 
 ---
