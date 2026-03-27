@@ -33,5 +33,6 @@ make -j $(nproc)
 ---
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/f4201fe2-7e27-4f61-8f9e-84c4e4d51720"/>
+  <img src="https://github.com/user-attachments/assets/8dfd759f-f80c-430a-8d1c-616fe364cca3"/>
+  <img src="https://github.com/user-attachments/assets/ad0fabb9-1be6-4fc8-b081-28d9c4a376da"/>
 </div>
